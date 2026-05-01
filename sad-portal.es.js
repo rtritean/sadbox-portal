@@ -1,5 +1,5 @@
 /**
- * @license sad-portal v0.0.3
+ * @license sad-portal v0.0.4
  * Copyright 2026 The sad-portal Authors
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -2843,7 +2843,7 @@ function Pb() {
       }
     }
 
-    /* ── Tablet layout (768px – 1024px) ──────────────────────────────── */
+    /* ── Tablet layout (768px - 1024px) ──────────────────────────────── */
     /* Keep sidebar + content, right panels are now inside their content components. */
     @media (min-width: 768px) and (max-width: 1024px) {
       sad-portal .sad-portal-main {
@@ -35831,7 +35831,7 @@ function wo(e, t) {
 const Eo = m`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M7 3.5A1.5 1.5 0 0 1 8.5 2h3.879a1.5 1.5 0 0 1 1.06.44l3.122 3.12A1.5 1.5 0 0 1 17 6.622V12.5a1.5 1.5 0 0 1-1.5 1.5h-1v-3.379a3 3 0 0 0-.879-2.121L10.5 5.379A3 3 0 0 0 8.379 4.5H7v-1Z"/><path d="M4.5 6A1.5 1.5 0 0 0 3 7.5v9A1.5 1.5 0 0 0 4.5 18h7a1.5 1.5 0 0 0 1.5-1.5v-5.879a1.5 1.5 0 0 0-.44-1.06L9.44 6.439A1.5 1.5 0 0 0 8.378 6H4.5Z"/></svg>`, ko = m`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>`;
 let ee = class extends he {
   constructor() {
-    super(...arguments), this.specUrl = "", this.spec = "", this.stylesheet = "", this.theme = "dark", this.mode = "standalone", this.apiInfoMode = "none", this.labelMode = "path", this.hideSecondary = !1, this.hideInternal = !1, this.overviewSelected = !1, this.groupUntagged = !1, this.scrollToOperation = "", this.tocIndex = /* @__PURE__ */ new Map(), this.width = "", this.showSchemas = !1, this.collapseMode = "none", this.showSearch = !1, this.specBlob = null, this.fetchInterceptor = void 0, this.showExtrasSamples = !1, this.showExtrasExamples = !1, this.extrasWidth = "280px", this._loadToken = 0, this._loadState = "idle", this._drawerOpen = !1, this._drawerClosing = !1, this._searchQuery = "", this._spec = null, this._grouped = /* @__PURE__ */ new Map(), this._webhooks = [], this._activeTag = "", this._activeEndpoint = null, this._overviewSelected = !1, this._error = "", this._schemas = [], this._activeSchema = null, this._extrasLang = "curl", this._extrasCopiedCode = !1, this._extrasCopiedResponse = !1, this._extrasResponseKey = "__default__";
+    super(...arguments), this.specUrl = "", this.spec = "", this.stylesheet = "", this.theme = "dark", this.mode = "standalone", this.apiInfoMode = "none", this.labelMode = "path", this.hideSecondary = !1, this.hideInternal = !1, this.overviewSelected = !1, this.groupUntagged = !1, this.scrollToOperation = "", this.tocIndex = /* @__PURE__ */ new Map(), this.width = "", this.showSchemas = !1, this.collapseMode = "none", this.showSearch = !1, this.specBlob = null, this.fetchInterceptor = void 0, this.showExtrasSamples = !1, this.showExtrasExamples = !1, this.extrasWidth = "280px", this._loadToken = 0, this._loadState = "idle", this._drawerOpen = !1, this._drawerClosing = !1, this._searchQuery = "", this._spec = null, this._grouped = /* @__PURE__ */ new Map(), this._webhooks = [], this._activeTag = "", this._activeEndpoint = null, this._overviewSelected = !1, this._error = "", this._schemas = [], this._activeSchema = null, this._extrasLang = "curl", this._extrasCopiedCode = !1, this._extrasCopiedResponse = !1, this._extrasResponseKey = "__default__", this._contentRo = null;
   }
   _closeDrawer() {
     this._drawerOpen && (this._drawerClosing = !0, this._drawerOpen = !1, setTimeout(() => {
@@ -35839,7 +35839,18 @@ let ee = class extends he {
     }, 250));
   }
   connectedCallback() {
-    super.connectedCallback(), this.hasAttribute("theme") || (this.setAttribute("theme", "dark"), this.theme = "dark"), this._load();
+    super.connectedCallback(), this.hasAttribute("theme") || (this.setAttribute("theme", "dark"), this.theme = "dark"), this._load(), this._contentRo = new ResizeObserver((e) => {
+      for (const t of e) {
+        const r = t.contentRect.width;
+        if (r === 0) continue;
+        const n = getComputedStyle(this), i = this.mode === "portal" ? 0 : parseFloat(n.getPropertyValue("--sad-sidebar-width")) || 280, s = parseFloat(this.extrasWidth) || 280, a = parseFloat(n.getPropertyValue("--sad-space-md")) || 16, o = this.mode === "portal" ? 1 : 2, c = r - i - s - a * o;
+        this.toggleAttribute("data-content-narrow", c < 700);
+      }
+    }), this._contentRo.observe(this);
+  }
+  disconnectedCallback() {
+    var e;
+    super.disconnectedCallback(), (e = this._contentRo) == null || e.disconnect(), this._contentRo = null;
   }
   updated(e) {
     var t, r;
@@ -36159,7 +36170,7 @@ ee.styles = [
         width: 100%;
         background: var(--sad-bg, transparent);
         position: relative;
-        container-type: inline-size;
+
       }
 
       :host([mode="portal"]) {
@@ -36185,6 +36196,7 @@ ee.styles = [
         flex-direction: column;
         grid-row: 2;
         grid-column: 1;
+        z-index: 201;
       }
 
       .sidebar-list {
@@ -36471,44 +36483,51 @@ ee.styles = [
       }
 
       /* ── Mobile layout ────────────────────────────────────────── */
-      @container (max-width: 768px) {
+
+      @media (max-width: 768px) {
+        :host {
+          grid-template-columns: 1fr !important;
+        }
         .mobile-bar { display: flex; }
-
-        .content { grid-column: 1 / -1; grid-row: 2; }
-
-        /* Hide extras on mobile */
-        .extras-panel { display: none !important; }
-
-        :host([data-extras-active]) {
-          grid-template-columns: var(--sad-sidebar-width, 280px) minmax(0, 1fr);
+        .content {
+          grid-column: 1 / -1;
+          grid-row: 2;
+          width: 100vw;
+          min-width: 0;
+          max-width: 100vw;
+        }
+        /* Hide extras and sidebar on mobile by default */
+        .extras-panel,
+        .sidebar {
+          display: none !important;
         }
 
-        .sidebar {
-          position: absolute;
-          /* Span full grid height so the drawer covers the mobile-bar row too. */
-          grid-row: 1 / -1;
-          grid-column: 1;
+        /* Show sidebar when drawer is open or closing */
+        .sidebar.drawer-open,
+        .sidebar.drawer-closing {
+          display: flex !important;
+          position: fixed;
           top: 0;
           left: 0;
-          width: min(var(--sad-sidebar-width, 280px), 85%);
-          height: 100%;
-          z-index: 200;
-          transform: translateX(-100%);
-          background: var(--sad-surface, #161b22);
-          border-right: 1px solid var(--sad-border, #30363d);
-          padding: var(--sad-space-sm, 8px);
-          box-sizing: border-box;
-        }
-
-        .sidebar.drawer-open {
+          width: var(--sad-sidebar-width, 280px);
+          height: 100dvh;
+          box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+          background: var(--sad-sidebar-bg, #18181b);
+          z-index: 201;
           transform: translateX(0);
-          transition: transform 0.25s ease;
         }
-
-        /* Closing animation: keep transition active while drawer is collapsing */
-        .sidebar.drawer-closing {
-          transition: transform 0.25s ease;
-        }
+      }
+        
+      /* ── Tablet: hide extras when .content width drops below 700px ──────────
+         data-content-narrow is toggled by a ResizeObserver in updated().      */
+      :host([data-content-narrow][data-extras-active]) {
+        grid-template-columns: var(--sad-sidebar-width, 280px) 1fr;
+      }
+      :host([mode="portal"][data-content-narrow][data-extras-active]) {
+        grid-template-columns: 1fr;
+      }
+      :host([data-content-narrow]) .extras-panel {
+        display: none !important;
       }
     `
 ];
@@ -38784,7 +38803,7 @@ const Nw = {
 };
 let xe = class extends he {
   constructor() {
-    super(...arguments), this.href = "", this.baseUrl = "/", this.tocIndex = /* @__PURE__ */ new Map(), this.fetchFn = void 0, this.contentAlign = "left", this.contentWidth = "100%", this.theme = "dark", this.fragment = "", this.hljsThemeLight = "", this.hljsThemeDark = "", this.markdownThemeLight = "", this.markdownThemeDark = "", this.showToc = !1, this.tocWidth = "260px", this.tocLabel = "On this page", this.hideTocLabel = !1, this._tocOpen = /* @__PURE__ */ new Set(), this._prevTocFragment = void 0, this._hljsSheet = null, this._hljsStyleEl = null, this._hljsAppliedKey = "", this._articleSheet = null, this._articleStyleEl = null, this._articleAppliedKey = "", this._html = "", this._state = "idle", this._error = "", this._toc = [], this._onScrollToFragment = (e) => {
+    super(...arguments), this.href = "", this.baseUrl = "/", this.tocIndex = /* @__PURE__ */ new Map(), this.fetchFn = void 0, this.contentAlign = "left", this.contentWidth = "100%", this.theme = "dark", this.fragment = "", this.hljsThemeLight = "", this.hljsThemeDark = "", this.markdownThemeLight = "", this.markdownThemeDark = "", this.showToc = !1, this.tocWidth = "260px", this.tocLabel = "On this page", this.hideTocLabel = !1, this._tocOpen = /* @__PURE__ */ new Set(), this._prevTocFragment = void 0, this._hljsSheet = null, this._hljsStyleEl = null, this._hljsAppliedKey = "", this._articleSheet = null, this._articleStyleEl = null, this._articleAppliedKey = "", this._tocRo = null, this._html = "", this._state = "idle", this._error = "", this._toc = [], this._onScrollToFragment = (e) => {
       const t = e;
       if (!t.detail || t.detail.href && t.detail.href !== this.href || !t.detail.fragment) return;
       const r = t.detail.fragment, n = this.renderRoot.querySelector(`#${CSS.escape(r)}`);
@@ -38889,10 +38908,18 @@ let xe = class extends he {
       window.addEventListener("sad-scroll-to-fragment", this._onScrollToFragment);
     } catch {
     }
-    window.addEventListener("sad-request-page-toc", this._onRequestPageToc), this.showToc && this.tocWidth && this.style.setProperty("--sad-toc-width", this.tocWidth);
+    window.addEventListener("sad-request-page-toc", this._onRequestPageToc), this.showToc && this.tocWidth && this.style.setProperty("--sad-toc-width", this.tocWidth), this._tocRo = new ResizeObserver((e) => {
+      for (const t of e) {
+        const r = t.contentRect.width;
+        if (r === 0) continue;
+        const n = parseFloat(this.tocWidth) || 260, i = parseFloat(getComputedStyle(this).getPropertyValue("--sad-space-md")) || 16, s = r - n - i;
+        this.toggleAttribute("data-toc-narrow", s < 700);
+      }
+    }), this._tocRo.observe(this);
   }
   disconnectedCallback() {
-    super.disconnectedCallback(), this.dispatchEvent(new CustomEvent("sad-unregister-page-toc", { detail: { href: this.href }, bubbles: !0, composed: !0 }));
+    var e;
+    super.disconnectedCallback(), (e = this._tocRo) == null || e.disconnect(), this._tocRo = null, this.dispatchEvent(new CustomEvent("sad-unregister-page-toc", { detail: { href: this.href }, bubbles: !0, composed: !0 }));
     try {
       window.removeEventListener("sad-request-page-toc", this._onRequestPageToc);
     } catch {
@@ -39043,6 +39070,7 @@ xe.styles = [
         align-items: stretch;
         height: 100%;
         overflow: hidden;
+        container-type: inline-size;
       }
 
       .article-scroll {
@@ -39051,6 +39079,7 @@ xe.styles = [
         height: 100%;
         scrollbar-width: thin;
         scrollbar-color: transparent var(--sad-scrollbar-track, transparent);
+        container-type: inline-size;
       }
       .article-scroll:hover { scrollbar-color: var(--sad-scrollbar-thumb) var(--sad-scrollbar-track, transparent); }
       .article-scroll:hover::-webkit-scrollbar-thumb { background-color: var(--sad-scrollbar-thumb); }
@@ -39128,6 +39157,15 @@ xe.styles = [
       .toc-link.active-link {
         color: var(--sad-primary, #6366f1);
         font-weight: 600;
+      }
+
+      /* ── Tablet: hide TOC panel when content width drops below 700px ──────
+         data-toc-narrow is toggled by a ResizeObserver in connectedCallback(). */
+      :host([data-toc-narrow]) {
+        grid-template-columns: 1fr !important;
+      }
+      :host([data-toc-narrow]) .toc-panel {
+        display: none !important;
       }
     `
 ];
